@@ -1,6 +1,8 @@
 {
 	"name": "cyber-defender",
-	"private": true,
+	"description": "Cyber Defender",
+	"license": "MIT",
+	"author": "Nonthaphat Chaisu <hi@podter.me> (https://podter.me/)",
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
