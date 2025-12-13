@@ -1,10 +1,19 @@
 <script lang="ts">
-	let count: number = $state(0);
-	const increment = () => {
-		count += 1;
-	};
+	import GameOver from './components/game-over.svelte';
+	import Game from './components/game.svelte';
+	import Header from './components/header.svelte';
+	import StartScreen from './components/start-screen.svelte';
+	import { gameState } from './lib/store';
 </script>
 
-<button onclick={increment}>
-	count is {count}
-</button>
+<Header />
+
+<main class="game-container">
+	{#if $gameState === 'playing'}
+		<Game />
+	{:else if $gameState === 'gameover'}
+		<GameOver />
+	{:else}
+		<StartScreen />
+	{/if}
+</main>

@@ -1,0 +1,273 @@
+/* --- Color Variables and Theme Setup (CSS Variables) --- */
+:root {
+	--bg-color: #050505;
+	--grid-bg: #111;
+	--neon-green: #00ff41;
+	--neon-blue: #00f3ff;
+	--neon-red: #ff003c;
+	--text-color: #fff;
+	--font-main: 'Courier New', Courier, monospace; /* Hacker-style font */
+}
+
+* {
+	box-sizing: border-box;
+	user-select: none; /* Prevent text selection during gameplay */
+	-webkit-tap-highlight-color: transparent;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	font-family: var(--font-main);
+	overflow: hidden;
+	/* Cyberpunk-style grid pattern background */
+	background-image:
+		linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+	background-size: 30px 30px;
+}
+
+#app {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* --- Header: Score and Time --- */
+header {
+	width: 100%;
+	max-width: 600px;
+	padding: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.8);
+	border-bottom: 2px solid var(--neon-blue);
+	box-shadow: 0 0 15px var(--neon-blue);
+	z-index: 10;
+}
+
+h1 {
+	margin: 0;
+	font-size: 1.2rem;
+	color: var(--neon-blue);
+	text-shadow: 0 0 5px var(--neon-blue);
+}
+
+.stats {
+	display: flex;
+	gap: 20px;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.stat-box span {
+	color: var(--neon-green);
+}
+
+/* --- Game Board Area --- */
+.game-container {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	max-width: 600px;
+	padding: 10px;
+	position: relative;
+}
+
+/* 3x4 Grid */
+.grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(4, 1fr);
+	gap: 10px;
+	width: 100%;
+	height: 100%;
+	max-height: 700px;
+}
+
+/* Hole */
+.hole {
+	background-color: #222;
+	border: 1px solid #333;
+	border-radius: 8px;
+	position: relative;
+	overflow: hidden; /* Hide overflow outside the frame */
+	box-shadow: inset 0 0 10px #000;
+}
+
+/* Pop-up Target (Mole) */
+.popup {
+	position: absolute;
+	top: 100%; /* Initially hidden below */
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 5px;
+	transition: top 0.1s ease-out; /* Pop-up animation */
+	cursor: pointer;
+	border: 2px solid transparent;
+}
+
+/* State when target pops up */
+.hole.up .popup {
+	top: 0;
+}
+
+/* Target design */
+.popup-icon {
+	font-size: 2.5rem;
+	margin-bottom: 5px;
+	filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+.popup-text {
+	font-size: 0.8rem;
+	font-weight: bold;
+	line-height: 1.2;
+	background: rgba(0, 0, 0, 0.7);
+	padding: 2px 5px;
+	border-radius: 4px;
+}
+
+/* Style for bad targets */
+.type-bad {
+	background: linear-gradient(135deg, #300 0%, #000 100%);
+	border-color: var(--neon-red);
+	box-shadow: 0 0 10px var(--neon-red) inset;
+}
+.type-bad .popup-text {
+	color: var(--neon-red);
+}
+
+/* Style for good targets */
+.type-good {
+	background: linear-gradient(135deg, #030 0%, #000 100%);
+	border-color: var(--neon-green);
+	box-shadow: 0 0 10px var(--neon-green) inset;
+}
+.type-good .popup-text {
+	color: var(--neon-green);
+}
+
+/* --- Effects --- */
+/* Screen shake when clicking wrong target */
+.shake {
+	animation: shake-anim 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake-anim {
+	10%,
+	90% {
+		transform: translate3d(-1px, 0, 0);
+		background-color: rgba(50, 0, 0, 0.2);
+	}
+	20%,
+	80% {
+		transform: translate3d(2px, 0, 0);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translate3d(-4px, 0, 0);
+	}
+	40%,
+	60% {
+		transform: translate3d(4px, 0, 0);
+	}
+}
+
+/* --- Start/End Game Screen (Overlay) --- */
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.9);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	text-align: center;
+	backdrop-filter: blur(5px);
+}
+
+.title-screen h1 {
+	font-size: 2.5rem;
+	color: var(--neon-green);
+	margin-bottom: 20px;
+	text-shadow: 0 0 20px var(--neon-green);
+}
+
+.btn {
+	background: transparent;
+	color: var(--neon-blue);
+	border: 2px solid var(--neon-blue);
+	padding: 15px 40px;
+	font-size: 1.5rem;
+	font-family: var(--font-main);
+	cursor: pointer;
+	text-transform: uppercase;
+	font-weight: bold;
+	box-shadow: 0 0 10px var(--neon-blue);
+	transition: all 0.2s;
+	margin-top: 20px;
+}
+
+.btn:hover {
+	background: var(--neon-blue);
+	color: #000;
+	transform: scale(1.05);
+	box-shadow: 0 0 20px var(--neon-blue);
+}
+
+.btn:active {
+	transform: scale(0.95);
+}
+
+.instruction {
+	margin: 20px;
+	color: #ccc;
+	line-height: 1.6;
+	max-width: 80%;
+}
+
+.score-summary {
+	font-size: 3rem;
+	color: var(--neon-green);
+	margin: 20px 0;
+	text-shadow: 0 0 10px var(--neon-green);
+}
+
+.rank-badge {
+	font-size: 1.5rem;
+	color: #fff;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1px dashed #fff;
+}
+
+/* Responsive for Mobile */
+@media (max-width: 400px) {
+	.grid {
+		grid-template-columns: repeat(2, 1fr); /* Reduce to 2 columns for small mobile screens */
+		grid-template-rows: repeat(6, 1fr);
+	}
+	h1 {
+		font-size: 1rem;
+	}
+	.popup-icon {
+		font-size: 2rem;
+	}
+}
